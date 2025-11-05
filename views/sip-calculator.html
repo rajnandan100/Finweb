@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Calculate SIP returns for mutual funds. Free online SIP calculator to plan your systematic investments.">
+    <title>SIP Calculator - Calculate Mutual Fund SIP Returns</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <h1>📊 SIP Calculator</h1>
+            <p>Calculate your Systematic Investment Plan returns</p>
+            <div class="nav-links">
+                <a href="/" class="nav-btn">🏠 Home</a>
+                <a href="/emi-calculator.html" class="nav-btn">📈 EMI</a>
+                <a href="/swp-calculator.html" class="nav-btn">💳 SWP</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <!-- Ad Zone: Header Banner -->
+            <div class="ad-zone ad-header">
+                <small>Advertisement (728×90)</small>
+            </div>
+
+            <div class="content-grid">
+                <!-- Calculator Section -->
+                <div>
+                    <div class="card">
+                        <div class="card-header">
+                            <h2 class="card-title">Calculate Your SIP Returns</h2>
+                            <p class="card-subtitle">Enter your investment details to calculate future value</p>
+                        </div>
+
+                        <form id="sipForm" class="calculator-inputs">
+                            <!-- Monthly Investment -->
+                            <div class="form-group">
+                                <label for="monthlyInvestment" class="form-label">
+                                    Monthly Investment (₹)
+                                </label>
+                                <input 
+                                    type="number" 
+                                    id="monthlyInvestment" 
+                                    class="form-input" 
+                                    value="5000" 
+                                    min="500" 
+                                    step="500" 
+                                    required
+                                >
+                            </div>
+
+                            <!-- Expected Return Rate -->
+                            <div class="form-group">
+                                <label for="returnRate" class="form-label">
+                                    Expected Return Rate (% per annum)
+                                </label>
+                                <input 
+                                    type="number" 
+                                    id="returnRate" 
+                                    class="form-input" 
+                                    value="12" 
+                                    min="0.1" 
+                                    max="30" 
+                                    step="0.5" 
+                                    required
+                                >
+                            </div>
+
+                            <!-- Investment Tenure -->
+                            <div class="form-group">
+                                <label for="investmentTenure" class="form-label">
+                                    Investment Tenure (Years)
+                                </label>
+                                <input 
+                                    type="number" 
+                                    id="investmentTenure" 
+                                    class="form-input" 
+                                    value="10" 
+                                    min="1" 
+                                    max="40" 
+                                    step="1" 
+                                    required
+                                >
+                            </div>
+
+                            <button type="submit" class="btn btn-primary btn-block">
+                                Calculate SIP
+                            </button>
+                        </form>
+
+                        <!-- Results -->
+                        <div id="sipResults" class="hidden">
+                            <div class="result-box">
+                                <div class="result-label">Future Value</div>
+                                <div class="result-value" id="futureValue">₹0</div>
+                                <div class="result-details">
+                                    <div style="margin: 0.5rem 0;">
+                                        <strong>Total Investment:</strong> <span id="totalInvestment">₹0</span>
+                                    </div>
+                                    <div style="margin: 0.5rem 0;">
+                                        <strong>Total Returns:</strong> <span id="totalReturns">₹0</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quiz Section -->
+                    <div id="quizContainer" class="hidden"></div>
+
+                    <!-- Ad Zone: Inline -->
+                    <div class="ad-zone ad-inline">
+                        <small>Advertisement (970×250)</small>
+                    </div>
+
+                    <!-- Information Card -->
+                    <div class="card">
+                        <h3 class="card-title" style="font-size: 1.25rem;">What is SIP?</h3>
+                        <p style="margin-bottom: 1rem;">
+                            SIP (Systematic Investment Plan) is a method of investing a fixed sum regularly in a mutual fund. 
+                            SIP allows you to invest in a disciplined manner without worrying about market volatility and timing 
+                            the market. It leverages the power of compounding to grow your wealth over time.
+                        </p>
+                        <h4 style="font-weight: 600; margin-bottom: 0.5rem;">SIP Benefits:</h4>
+                        <p style="background: var(--bg-light); padding: 1rem; border-radius: var(--radius-md);">
+                            • Rupee cost averaging<br>
+                            • Power of compounding<br>
+                            • Disciplined investing<br>
+                            • Flexibility in amounts and tenure
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Sidebar -->
+                <aside>
+                    <!-- Ad Zone: Sidebar -->
+                    <div class="ad-zone ad-sidebar">
+                        <small>Advertisement (300×600)</small>
+                    </div>
+                </aside>
+            </div>
+        </div>
+    </main>
+
+    <!-- Scripts -->
+    <script src="/js/utils.js"></script>
+    <script>
+        const { 
+            getQueryParam, 
+            calculateSIP, 
+            formatCurrency, 
+            fetchQuiz, 
+            QuizTimer 
+        } = window.FinancialCalc;
+
+        // DOM Elements
+        const sipForm = document.getElementById('sipForm');
+        const sipResults = document.getElementById('sipResults');
+        const quizContainer = document.getElementById('quizContainer');
+
+        // Calculate SIP on form submit
+        sipForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const monthlyInvestment = parseFloat(document.getElementById('monthlyInvestment').value);
+            const returnRate = parseFloat(document.getElementById('returnRate').value);
+            const investmentTenure = parseFloat(document.getElementById('investmentTenure').value);
+
+            const result = calculateSIP(monthlyInvestment, returnRate, investmentTenure);
+
+            document.getElementById('futureValue').textContent = formatCurrency(result.futureValue);
+            document.getElementById('totalInvestment').textContent = formatCurrency(result.totalInvestment);
+            document.getElementById('totalReturns').textContent = formatCurrency(result.totalReturns);
+
+            sipResults.classList.remove('hidden');
+        });
+
+        // Auto-calculate on input change
+        ['monthlyInvestment', 'returnRate', 'investmentTenure'].forEach(id => {
+            document.getElementById(id).addEventListener('input', () => {
+                sipForm.dispatchEvent(new Event('submit'));
+            });
+        });
+
+        // Load Quiz if quizId exists
+        const quizId = getQueryParam('quizid');
+        if (quizId) {
+            loadQuiz(quizId);
+        }
+
+        async function loadQuiz(quizId) {
+            try {
+                const quizData = await fetchQuiz(quizId);
+
+                if (quizData.success && quizData.pageType === 'sip') {
+                    renderQuizCard(quizData);
+                }
+            } catch (error) {
+                console.error('Failed to load quiz:', error);
+            }
+        }
+
+        function renderQuizCard(quizData) {
+            const timer = new QuizTimer(
+                quizData.timerDuration,
+                (timeLeft) => {
+                    const timerElement = document.getElementById('quizTimer');
+                    if (timerElement) {
+                        timerElement.textContent = timer.getFormattedTime();
+                        timerElement.className = `quiz-timer ${timer.getTimeColor()}`;
+                    }
+                },
+                () => {
+                    document.getElementById('quizNextBtn').disabled = false;
+                }
+            );
+
+            quizContainer.innerHTML = `
+                <div class="quiz-card">
+                    <div class="quiz-header">
+                        <div class="quiz-title">
+                            <span>📝</span>
+                            <span>${quizData.quizName}</span>
+                        </div>
+                        <div id="quizTimer" class="quiz-timer timer-green">
+                            <span>⏱️</span>
+                            <span>${timer.getFormattedTime()}</span>
+                        </div>
+                    </div>
+                    <div class="quiz-question">
+                        ${quizData.questionText}
+                    </div>
+                    <input 
+                        type="text" 
+                        id="quizAnswer" 
+                        class="quiz-input" 
+                        placeholder="${quizData.placeholder}"
+                        ${quizData.requireAnswer ? 'required' : ''}
+                    >
+                    <div class="quiz-footer">
+                        <button 
+                            id="quizNextBtn" 
+                            class="btn btn-success" 
+                            disabled
+                        >
+                            Next →
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            quizContainer.classList.remove('hidden');
+            timer.start();
+
+            // Handle Next button click
+            document.getElementById('quizNextBtn').addEventListener('click', () => {
+                const answer = document.getElementById('quizAnswer').value.trim();
+                
+                if (quizData.requireAnswer && !answer) {
+                    alert('Please enter an answer before proceeding');
+                    return;
+                }
+
+                // Redirect to next page
+                window.location.href = `${quizData.nextPageUrl}?quizid=${quizData.nextQuizId}`;
+            });
+
+            // Enable next button if answer is entered and require_answer is true
+            if (quizData.requireAnswer) {
+                document.getElementById('quizAnswer').addEventListener('input', (e) => {
+                    const hasAnswer = e.target.value.trim().length > 0;
+                    const timerComplete = timer.timeLeft <= 0;
+                    document.getElementById('quizNextBtn').disabled = !(hasAnswer && timerComplete);
+                });
+            }
+        }
+
+        // Initial calculation on page load
+        sipForm.dispatchEvent(new Event('submit'));
+    </script>
+</body>
+</html>

@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Calculate EMI for home loans, car loans, personal loans. Free online EMI calculator with detailed breakup.">
+    <title>EMI Calculator - Calculate Loan EMI Online</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <h1>📈 EMI Calculator</h1>
+            <p>Calculate your Equated Monthly Installments</p>
+            <div class="nav-links">
+                <a href="/" class="nav-btn">🏠 Home</a>
+                <a href="/sip-calculator.html" class="nav-btn">📊 SIP</a>
+                <a href="/swp-calculator.html" class="nav-btn">💳 SWP</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <!-- Ad Zone: Header Banner -->
+            <div class="ad-zone ad-header">
+                <small>Advertisement (728×90)</small>
+            </div>
+
+            <div class="content-grid">
+                <!-- Calculator Section -->
+                <div>
+                    <div class="card">
+                        <div class="card-header">
+                            <h2 class="card-title">Calculate Your EMI</h2>
+                            <p class="card-subtitle">Enter your loan details to calculate monthly installment</p>
+                        </div>
+
+                        <form id="emiForm" class="calculator-inputs">
+                            <!-- Loan Amount -->
+                            <div class="form-group">
+                                <label for="loanAmount" class="form-label">
+                                    Loan Amount (₹)
+                                </label>
+                                <input 
+                                    type="number" 
+                                    id="loanAmount" 
+                                    class="form-input" 
+                                    value="1000000" 
+                                    min="10000" 
+                                    step="10000" 
+                                    required
+                                >
+                            </div>
+
+                            <!-- Interest Rate -->
+                            <div class="form-group">
+                                <label for="interestRate" class="form-label">
+                                    Interest Rate (% per annum)
+                                </label>
+                                <input 
+                                    type="number" 
+                                    id="interestRate" 
+                                    class="form-input" 
+                                    value="8.5" 
+                                    min="0.1" 
+                                    max="30" 
+                                    step="0.1" 
+                                    required
+                                >
+                            </div>
+
+                            <!-- Loan Tenure -->
+                            <div class="form-group">
+                                <label for="loanTenure" class="form-label">
+                                    Loan Tenure (Years)
+                                </label>
+                                <input 
+                                    type="number" 
+                                    id="loanTenure" 
+                                    class="form-input" 
+                                    value="20" 
+                                    min="1" 
+                                    max="30" 
+                                    step="1" 
+                                    required
+                                >
+                            </div>
+
+                            <button type="submit" class="btn btn-primary btn-block">
+                                Calculate EMI
+                            </button>
+                        </form>
+
+                        <!-- Results -->
+                        <div id="emiResults" class="hidden">
+                            <div class="result-box">
+                                <div class="result-label">Monthly EMI</div>
+                                <div class="result-value" id="emiAmount">₹0</div>
+                                <div class="result-details">
+                                    <div style="margin: 0.5rem 0;">
+                                        <strong>Principal Amount:</strong> <span id="principalAmount">₹0</span>
+                                    </div>
+                                    <div style="margin: 0.5rem 0;">
+                                        <strong>Total Interest:</strong> <span id="totalInterest">₹0</span>
+                                    </div>
+                                    <div style="margin: 0.5rem 0;">
+                                        <strong>Total Amount:</strong> <span id="totalAmount">₹0</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quiz Section -->
+                    <div id="quizContainer" class="hidden"></div>
+
+                    <!-- Ad Zone: Inline -->
+                    <div class="ad-zone ad-inline">
+                        <small>Advertisement (970×250)</small>
+                    </div>
+
+                    <!-- Information Card -->
+                    <div class="card">
+                        <h3 class="card-title" style="font-size: 1.25rem;">What is EMI?</h3>
+                        <p style="margin-bottom: 1rem;">
+                            EMI (Equated Monthly Installment) is a fixed payment amount made by a borrower to a lender 
+                            at a specified date each calendar month. EMIs are used to pay off both interest and principal 
+                            each month, so that over a specified number of years, the loan is paid off in full.
+                        </p>
+                        <h4 style="font-weight: 600; margin-bottom: 0.5rem;">EMI Formula:</h4>
+                        <p style="background: var(--bg-light); padding: 1rem; border-radius: var(--radius-md); font-family: monospace;">
+                            EMI = [P × R × (1+R)^N] / [(1+R)^N-1]
+                        </p>
+                        <p style="margin-top: 1rem; font-size: 0.875rem; color: var(--text-light);">
+                            Where P = Principal loan amount, R = Monthly interest rate, N = Loan tenure in months
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Sidebar -->
+                <aside>
+                    <!-- Ad Zone: Sidebar -->
+                    <div class="ad-zone ad-sidebar">
+                        <small>Advertisement (300×600)</small>
+                    </div>
+                </aside>
+            </div>
+        </div>
+    </main>
+
+    <!-- Scripts -->
+    <script src="/js/utils.js"></script>
+    <script>
+        const { 
+            getQueryParam, 
+            calculateEMI, 
+            formatCurrency, 
+            fetchQuiz, 
+            QuizTimer 
+        } = window.FinancialCalc;
+
+        // DOM Elements
+        const emiForm = document.getElementById('emiForm');
+        const emiResults = document.getElementById('emiResults');
+        const quizContainer = document.getElementById('quizContainer');
+
+        // Calculate EMI on form submit
+        emiForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const loanAmount = parseFloat(document.getElementById('loanAmount').value);
+            const interestRate = parseFloat(document.getElementById('interestRate').value);
+            const loanTenure = parseFloat(document.getElementById('loanTenure').value);
+
+            const result = calculateEMI(loanAmount, interestRate, loanTenure * 12);
+
+            document.getElementById('emiAmount').textContent = formatCurrency(result.emi);
+            document.getElementById('principalAmount').textContent = formatCurrency(result.principal);
+            document.getElementById('totalInterest').textContent = formatCurrency(result.totalInterest);
+            document.getElementById('totalAmount').textContent = formatCurrency(result.totalAmount);
+
+            emiResults.classList.remove('hidden');
+        });
+
+        // Auto-calculate on input change
+        ['loanAmount', 'interestRate', 'loanTenure'].forEach(id => {
+            document.getElementById(id).addEventListener('input', () => {
+                emiForm.dispatchEvent(new Event('submit'));
+            });
+        });
+
+        // Load Quiz if quizId exists
+        const quizId = getQueryParam('quizid');
+        if (quizId) {
+            loadQuiz(quizId);
+        }
+
+        async function loadQuiz(quizId) {
+            try {
+                const quizData = await fetchQuiz(quizId);
+
+                if (quizData.success && quizData.pageType === 'emi') {
+                    renderQuizCard(quizData);
+                }
+            } catch (error) {
+                console.error('Failed to load quiz:', error);
+            }
+        }
+
+        function renderQuizCard(quizData) {
+            const timer = new QuizTimer(
+                quizData.timerDuration,
+                (timeLeft) => {
+                    const timerElement = document.getElementById('quizTimer');
+                    if (timerElement) {
+                        timerElement.textContent = timer.getFormattedTime();
+                        timerElement.className = `quiz-timer ${timer.getTimeColor()}`;
+                    }
+                },
+                () => {
+                    document.getElementById('quizNextBtn').disabled = false;
+                }
+            );
+
+            quizContainer.innerHTML = `
+                <div class="quiz-card">
+                    <div class="quiz-header">
+                        <div class="quiz-title">
+                            <span>📝</span>
+                            <span>${quizData.quizName}</span>
+                        </div>
+                        <div id="quizTimer" class="quiz-timer timer-green">
+                            <span>⏱️</span>
+                            <span>${timer.getFormattedTime()}</span>
+                        </div>
+                    </div>
+                    <div class="quiz-question">
+                        ${quizData.questionText}
+                    </div>
+                    <input 
+                        type="text" 
+                        id="quizAnswer" 
+                        class="quiz-input" 
+                        placeholder="${quizData.placeholder}"
+                        ${quizData.requireAnswer ? 'required' : ''}
+                    >
+                    <div class="quiz-footer">
+                        <button 
+                            id="quizNextBtn" 
+                            class="btn btn-success" 
+                            disabled
+                        >
+                            Next →
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            quizContainer.classList.remove('hidden');
+            timer.start();
+
+            // Handle Next button click
+            document.getElementById('quizNextBtn').addEventListener('click', () => {
+                const answer = document.getElementById('quizAnswer').value.trim();
+                
+                if (quizData.requireAnswer && !answer) {
+                    alert('Please enter an answer before proceeding');
+                    return;
+                }
+
+                // Redirect to next page
+                window.location.href = `${quizData.nextPageUrl}?quizid=${quizData.nextQuizId}`;
+            });
+
+            // Enable next button if answer is entered and require_answer is true
+            if (quizData.requireAnswer) {
+                document.getElementById('quizAnswer').addEventListener('input', (e) => {
+                    const hasAnswer = e.target.value.trim().length > 0;
+                    const timerComplete = timer.timeLeft <= 0;
+                    document.getElementById('quizNextBtn').disabled = !(hasAnswer && timerComplete);
+                });
+            }
+        }
+
+        // Initial calculation on page load
+        emiForm.dispatchEvent(new Event('submit'));
+    </script>
+</body>
+</html>

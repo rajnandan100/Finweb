@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Results - Financial Calculator</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <h1>🎉 Quiz Completed!</h1>
+            <p>Thank you for participating</p>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="container">
+            <div class="ad-zone ad-header"><small>Advertisement (728×90)</small></div>
+
+            <div class="content-grid">
+                <div>
+                    <div class="card results-container">
+                        <div class="results-icon">🏆</div>
+                        <div id="resultsMessage" class="results-message">Loading...</div>
+                        <a id="rewardBtn" href="#" class="reward-btn hidden">Get Reward →</a>
+                    </div>
+                    <div class="ad-zone ad-inline"><small>Advertisement (970×250)</small></div>
+                </div>
+                <aside>
+                    <div class="ad-zone ad-sidebar"><small>Advertisement (300×600)</small></div>
+                </aside>
+            </div>
+        </div>
+    </main>
+
+    <script src="/js/utils.js"></script>
+    <script>
+        const { getQueryParam, fetchQuiz } = window.FinancialCalc;
+        const quizId = getQueryParam('quizid');
+
+        if (quizId) {
+            loadResults(quizId);
+        } else {
+            document.getElementById('resultsMessage').innerHTML = '<p>No quiz ID found. Please complete the quiz to see results.</p>';
+        }
+
+        async function loadResults(quizId) {
+            try {
+                const quizData = await fetchQuiz(quizId);
+                if (quizData.success && quizData.pageType === 'results') {
+                    document.getElementById('resultsMessage').innerHTML = quizData.resultMessage;
+                    const rewardBtn = document.getElementById('rewardBtn');
+                    rewardBtn.href = quizData.rewardLink;
+                    rewardBtn.classList.remove('hidden');
+                } else {
+                    document.getElementById('resultsMessage').innerHTML = '<p>Invalid quiz or quiz not found.</p>';
+                }
+            } catch (error) {
+                console.error('Failed to load results:', error);
+                document.getElementById('resultsMessage').innerHTML = '<p>Error loading results. Please try again.</p>';
+            }
+        }
+    </script>
+</body>
+</html>

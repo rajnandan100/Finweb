@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Financial Calculator</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="admin-header">
+                <div>
+                    <h1>🔐 Admin Dashboard</h1>
+                    <p>Manage your quiz system</p>
+                </div>
+                <button id="logoutBtn" class="btn btn-danger" style="display:none;">Logout</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="container">
+            <!-- Login Form -->
+            <div id="loginSection" class="card" style="max-width: 400px; margin: 0 auto;">
+                <h2 class="card-title">Admin Login</h2>
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label class="form-label">Username</label>
+                        <input type="text" id="username" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Password</label>
+                        <input type="password" id="password" class="form-input" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">Login</button>
+                </form>
+                <div id="loginError" class="alert alert-danger hidden"></div>
+            </div>
+
+            <!-- Dashboard Section -->
+            <div id="dashboardSection" class="hidden">
+                <div class="card">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
+                        <h2 class="card-title">Quiz Management</h2>
+                        <button id="createQuizBtn" class="btn btn-primary">+ Create New Quiz</button>
+                    </div>
+                    <div id="quizList"></div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Create/Edit Quiz Modal -->
+    <div id="quizModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="modalTitle">Create New Quiz</h2>
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="quizForm">
+                    <input type="hidden" id="quizId">
+                    <div class="form-group">
+                        <label class="form-label">Quiz Name</label>
+                        <input type="text" id="quiz_name" class="form-input" required>
+                    </div>
+                    
+                    <h3 style="margin-top:1.5rem;">Question 1 (EMI Page)</h3>
+                    <div class="form-group">
+                        <label class="form-label">Question</label>
+                        <input type="text" id="question_1_text" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Placeholder</label>
+                        <input type="text" id="question_1_placeholder" class="form-input" value="Type your answer...">
+                    </div>
+
+                    <h3 style="margin-top:1.5rem;">Question 2 (SIP Page)</h3>
+                    <div class="form-group">
+                        <label class="form-label">Question</label>
+                        <input type="text" id="question_2_text" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Placeholder</label>
+                        <input type="text" id="question_2_placeholder" class="form-input" value="Type your answer...">
+                    </div>
+
+                    <h3 style="margin-top:1.5rem;">Question 3 (SWP Page)</h3>
+                    <div class="form-group">
+                        <label class="form-label">Question</label>
+                        <input type="text" id="question_3_text" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Placeholder</label>
+                        <input type="text" id="question_3_placeholder" class="form-input" value="Type your answer...">
+                    </div>
+
+                    <h3 style="margin-top:1.5rem;">Results Page</h3>
+                    <div class="form-group">
+                        <label class="form-label">Congratulations Message</label>
+                        <textarea id="result_message" class="form-textarea" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Reward Link</label>
+                        <input type="url" id="reward_link" class="form-input" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Timer Duration (seconds)</label>
+                        <input type="number" id="timer_duration" class="form-input" value="30" min="10" max="300">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="saveQuiz()">Save Quiz</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="/js/utils.js"></script>
+    <script>
+        const { adminLogin, fetchAllQuizzes, createQuiz, updateQuiz, deleteQuiz, toggleQuizStatus, getAuthToken, setAuthToken, removeAuthToken } = window.FinancialCalc;
+
+        // Check if already logged in
+        if (getAuthToken()) {
+            showDashboard();
+        }
+
+        // Login form
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            try {
+                const response = await adminLogin(username, password);
+                setAuthToken(response.token);
+                showDashboard();
+            } catch (error) {
+                document.getElementById('loginError').textContent = error.message;
+                document.getElementById('loginError').classList.remove('hidden');
+            }
+        });
+
+        // Logout
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            removeAuthToken();
+            location.reload();
+        });
+
+        // Show dashboard
+        async function showDashboard() {
+            document.getElementById('loginSection').classList.add('hidden');
+            document.getElementById('dashboardSection').classList.remove('hidden');
+            document.getElementById('logoutBtn').style.display = 'block';
+            loadQuizzes();
+        }
+
+        // Load quizzes
+        async function loadQuizzes() {
+            try {
+                const response = await fetchAllQuizzes();
+                const quizList = document.getElementById('quizList');
+                
+                if (response.quizzes.length === 0) {
+                    quizList.innerHTML = '<p>No quizzes found. Create your first quiz!</p>';
+                    return;
+                }
+
+                quizList.innerHTML = \`
+                    <table class="quiz-table">
+                        <thead>
+                            <tr>
+                                <th>Quiz Name</th>
+                                <th>Entry Link</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            \${response.quizzes.map(quiz => \`
+                                <tr>
+                                    <td>\${quiz.quiz_name}</td>
+                                    <td><a href="/emi-calculator.html?quizid=\${quiz.quiz_1_id}" target="_blank">Open Quiz</a></td>
+                                    <td><span class="badge \${quiz.is_active ? 'badge-active' : 'badge-inactive'}">\${quiz.is_active ? 'Active' : 'Inactive'}</span></td>
+                                    <td class="action-buttons">
+                                        <button class="btn btn-sm btn-secondary" onclick="editQuiz(\${quiz.id})">Edit</button>
+                                        <button class="btn btn-sm btn-danger" onclick="confirmDelete(\${quiz.id})">Delete</button>
+                                    </td>
+                                </tr>
+                            \`).join('')}
+                        </tbody>
+                    </table>
+                \`;
+            } catch (error) {
+                console.error('Failed to load quizzes:', error);
+            }
+        }
+
+        // Create quiz button
+        document.getElementById('createQuizBtn').addEventListener('click', () => {
+            document.getElementById('modalTitle').textContent = 'Create New Quiz';
+            document.getElementById('quizForm').reset();
+            document.getElementById('quizId').value = '';
+            document.getElementById('quizModal').classList.add('active');
+        });
+
+        // Edit quiz
+        async function editQuiz(id) {
+            // Implement edit functionality
+            alert('Edit functionality - Load quiz data and populate form');
+        }
+
+        // Save quiz
+        async function saveQuiz() {
+            const quizData = {
+                quiz_name: document.getElementById('quiz_name').value,
+                question_1_text: document.getElementById('question_1_text').value,
+                question_1_placeholder: document.getElementById('question_1_placeholder').value,
+                question_2_text: document.getElementById('question_2_text').value,
+                question_2_placeholder: document.getElementById('question_2_placeholder').value,
+                question_3_text: document.getElementById('question_3_text').value,
+                question_3_placeholder: document.getElementById('question_3_placeholder').value,
+                result_message: document.getElementById('result_message').value,
+                reward_link: document.getElementById('reward_link').value,
+                timer_duration: parseInt(document.getElementById('timer_duration').value)
+            };
+
+            try {
+                await createQuiz(quizData);
+                closeModal();
+                loadQuizzes();
+                alert('Quiz created successfully!');
+            } catch (error) {
+                alert('Error creating quiz: ' + error.message);
+            }
+        }
+
+        // Close modal
+        function closeModal() {
+            document.getElementById('quizModal').classList.remove('active');
+        }
+
+        // Confirm delete
+        async function confirmDelete(id) {
+            if (confirm('Are you sure you want to delete this quiz?')) {
+                try {
+                    await deleteQuiz(id);
+                    loadQuizzes();
+                    alert('Quiz deleted successfully!');
+                } catch (error) {
+                    alert('Error deleting quiz: ' + error.message);
+                }
+            }
+        }
+    </script>
+</body>
+</html>
