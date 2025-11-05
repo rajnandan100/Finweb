@@ -1,0 +1,697 @@
+/* ============================================================
+   Financial Calculator - Main Stylesheet
+   ============================================================ */
+
+/* ============================================================
+   1. CSS Variables & Root Styles
+   ============================================================ */
+:root {
+  --primary-color: #2563eb;
+  --primary-dark: #1e40af;
+  --secondary-color: #10b981;
+  --danger-color: #ef4444;
+  --warning-color: #f59e0b;
+  --text-dark: #1f2937;
+  --text-light: #6b7280;
+  --bg-light: #f9fafb;
+  --border-color: #e5e7eb;
+  --white: #ffffff;
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  --radius-sm: 0.375rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+}
+
+/* ============================================================
+   2. Reset & Base Styles
+   ============================================================ */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  line-height: 1.6;
+  color: var(--text-dark);
+  background-color: var(--bg-light);
+}
+
+/* ============================================================
+   3. Layout Components
+   ============================================================ */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.header {
+  background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+  color: var(--white);
+  padding: 1.5rem 0;
+  box-shadow: var(--shadow-md);
+}
+
+.header h1 {
+  font-size: 1.875rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.header p {
+  opacity: 0.9;
+  font-size: 1rem;
+}
+
+/* ============================================================
+   4. Navigation
+   ============================================================ */
+.nav-links {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-top: 1rem;
+}
+
+.nav-btn {
+  background-color: rgba(255, 255, 255, 0.2);
+  color: var(--white);
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-md);
+  text-decoration: none;
+  transition: all 0.3s ease;
+  font-weight: 500;
+}
+
+.nav-btn:hover {
+  background-color: rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
+}
+
+/* ============================================================
+   5. Main Content Area
+   ============================================================ */
+.main-content {
+  padding: 2rem 0;
+  min-height: calc(100vh - 200px);
+}
+
+.content-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+}
+
+@media (min-width: 1024px) {
+  .content-grid {
+    grid-template-columns: 2fr 1fr;
+  }
+}
+
+/* ============================================================
+   6. Card Components
+   ============================================================ */
+.card {
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  box-shadow: var(--shadow-md);
+  margin-bottom: 1.5rem;
+}
+
+.card-header {
+  border-bottom: 2px solid var(--border-color);
+  padding-bottom: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.card-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--primary-color);
+  margin-bottom: 0.5rem;
+}
+
+.card-subtitle {
+  font-size: 0.875rem;
+  color: var(--text-light);
+}
+
+/* ============================================================
+   7. Form Elements
+   ============================================================ */
+.form-group {
+  margin-bottom: 1.25rem;
+}
+
+.form-label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: var(--text-dark);
+}
+
+.form-input,
+.form-select,
+.form-textarea {
+  width: 100%;
+  padding: 0.75rem;
+  border: 2px solid var(--border-color);
+  border-radius: var(--radius-md);
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.form-input:focus,
+.form-select:focus,
+.form-textarea:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.form-textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+/* ============================================================
+   8. Buttons
+   ============================================================ */
+.btn {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  display: inline-block;
+  text-align: center;
+}
+
+.btn-primary {
+  background-color: var(--primary-color);
+  color: var(--white);
+}
+
+.btn-primary:hover {
+  background-color: var(--primary-dark);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.btn-success {
+  background-color: var(--secondary-color);
+  color: var(--white);
+}
+
+.btn-success:hover {
+  background-color: #059669;
+}
+
+.btn-danger {
+  background-color: var(--danger-color);
+  color: var(--white);
+}
+
+.btn-danger:hover {
+  background-color: #dc2626;
+}
+
+.btn-secondary {
+  background-color: var(--text-light);
+  color: var(--white);
+}
+
+.btn-secondary:hover {
+  background-color: var(--text-dark);
+}
+
+.btn-block {
+  width: 100%;
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+/* ============================================================
+   9. Calculator Components
+   ============================================================ */
+.calculator-inputs {
+  display: grid;
+  gap: 1.25rem;
+}
+
+.result-box {
+  background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+  color: var(--white);
+  padding: 2rem;
+  border-radius: var(--radius-lg);
+  text-align: center;
+  margin-top: 1.5rem;
+}
+
+.result-label {
+  font-size: 0.875rem;
+  opacity: 0.9;
+  margin-bottom: 0.5rem;
+}
+
+.result-value {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.result-details {
+  font-size: 0.875rem;
+  opacity: 0.8;
+  margin-top: 1rem;
+}
+
+/* ============================================================
+   10. Quiz Card Component
+   ============================================================ */
+.quiz-card {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: var(--white);
+  border-radius: var(--radius-lg);
+  padding: 2rem;
+  box-shadow: var(--shadow-lg);
+  margin-top: 2rem;
+}
+
+.quiz-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.quiz-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.quiz-timer {
+  font-size: 1.25rem;
+  font-weight: 700;
+  padding: 0.5rem 1rem;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.timer-green { color: #10b981; }
+.timer-yellow { color: #fbbf24; }
+.timer-red { color: #ef4444; }
+
+.quiz-question {
+  font-size: 1.125rem;
+  margin-bottom: 1.5rem;
+  line-height: 1.8;
+}
+
+.quiz-input {
+  width: 100%;
+  padding: 1rem;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: var(--radius-md);
+  font-size: 1rem;
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--white);
+  margin-bottom: 1.5rem;
+}
+
+.quiz-input::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.quiz-input:focus {
+  outline: none;
+  border-color: var(--white);
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.quiz-footer {
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* ============================================================
+   11. Ad Placement Zones
+   ============================================================ */
+.ad-zone {
+  background-color: var(--border-color);
+  border: 2px dashed var(--text-light);
+  border-radius: var(--radius-md);
+  padding: 1rem;
+  text-align: center;
+  color: var(--text-light);
+  margin: 1rem 0;
+}
+
+.ad-header {
+  min-height: 90px;
+}
+
+.ad-sidebar {
+  min-height: 250px;
+  position: sticky;
+  top: 1rem;
+}
+
+.ad-inline {
+  min-height: 250px;
+  margin: 2rem 0;
+}
+
+/* ============================================================
+   12. Results Page
+   ============================================================ */
+.results-container {
+  text-align: center;
+  padding: 3rem 0;
+}
+
+.results-icon {
+  font-size: 5rem;
+  margin-bottom: 2rem;
+}
+
+.results-message {
+  font-size: 1.5rem;
+  color: var(--text-dark);
+  margin-bottom: 2rem;
+  line-height: 1.8;
+}
+
+.reward-btn {
+  font-size: 1.25rem;
+  padding: 1rem 3rem;
+  background: linear-gradient(135deg, var(--secondary-color), #059669);
+  color: var(--white);
+  border: none;
+  border-radius: var(--radius-lg);
+  cursor: pointer;
+  font-weight: 700;
+  text-decoration: none;
+  display: inline-block;
+  transition: all 0.3s ease;
+}
+
+.reward-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-lg);
+}
+
+/* ============================================================
+   13. Admin Dashboard
+   ============================================================ */
+.admin-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.admin-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.quiz-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+}
+
+.quiz-table th,
+.quiz-table td {
+  padding: 1rem;
+  text-align: left;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.quiz-table th {
+  background-color: var(--primary-color);
+  color: var(--white);
+  font-weight: 600;
+}
+
+.quiz-table tr:hover {
+  background-color: var(--bg-light);
+}
+
+.badge {
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.badge-active {
+  background-color: #d1fae5;
+  color: #065f46;
+}
+
+.badge-inactive {
+  background-color: #fee2e2;
+  color: #991b1b;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.btn-sm {
+  padding: 0.375rem 0.75rem;
+  font-size: 0.875rem;
+}
+
+/* ============================================================
+   14. Modal
+   ============================================================ */
+.modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  overflow-y: auto;
+}
+
+.modal.active {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-content {
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  max-width: 800px;
+  width: 90%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: var(--shadow-lg);
+}
+
+.modal-header {
+  padding: 1.5rem;
+  border-bottom: 2px solid var(--border-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--primary-color);
+}
+
+.modal-close {
+  background: none;
+  border: none;
+  font-size: 2rem;
+  cursor: pointer;
+  color: var(--text-light);
+  line-height: 1;
+}
+
+.modal-body {
+  padding: 1.5rem;
+}
+
+.modal-footer {
+  padding: 1.5rem;
+  border-top: 2px solid var(--border-color);
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+}
+
+/* ============================================================
+   15. Alerts & Messages
+   ============================================================ */
+.alert {
+  padding: 1rem;
+  border-radius: var(--radius-md);
+  margin-bottom: 1rem;
+}
+
+.alert-success {
+  background-color: #d1fae5;
+  color: #065f46;
+  border-left: 4px solid var(--secondary-color);
+}
+
+.alert-danger {
+  background-color: #fee2e2;
+  color: #991b1b;
+  border-left: 4px solid var(--danger-color);
+}
+
+.alert-warning {
+  background-color: #fef3c7;
+  color: #92400e;
+  border-left: 4px solid var(--warning-color);
+}
+
+/* ============================================================
+   16. Utility Classes
+   ============================================================ */
+.text-center { text-align: center; }
+.text-right { text-align: right; }
+.mb-1 { margin-bottom: 0.5rem; }
+.mb-2 { margin-bottom: 1rem; }
+.mb-3 { margin-bottom: 1.5rem; }
+.mt-1 { margin-top: 0.5rem; }
+.mt-2 { margin-top: 1rem; }
+.mt-3 { margin-top: 1.5rem; }
+.hidden { display: none; }
+.flex { display: flex; }
+.flex-col { flex-direction: column; }
+.gap-1 { gap: 0.5rem; }
+.gap-2 { gap: 1rem; }
+
+/* ============================================================
+   17. Responsive Design
+   ============================================================ */
+@media (max-width: 768px) {
+  .header h1 {
+    font-size: 1.5rem;
+  }
+
+  .nav-links {
+    flex-direction: column;
+  }
+
+  .nav-btn {
+    text-align: center;
+  }
+
+  .result-value {
+    font-size: 2rem;
+  }
+
+  .quiz-header {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .quiz-timer {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .admin-header {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .quiz-table {
+    font-size: 0.875rem;
+  }
+
+  .quiz-table th,
+  .quiz-table td {
+    padding: 0.5rem;
+  }
+
+  .action-buttons {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 480px) {
+  .card {
+    padding: 1rem;
+  }
+
+  .btn {
+    padding: 0.625rem 1rem;
+    font-size: 0.875rem;
+  }
+
+  .result-box {
+    padding: 1.5rem;
+  }
+
+  .result-value {
+    font-size: 1.75rem;
+  }
+}
+
+/* ============================================================
+   18. Loading States
+   ============================================================ */
+.loading {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: var(--white);
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.skeleton {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
